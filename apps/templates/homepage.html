@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    @keyframes slideIn {
+        0% {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .overlay-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        animation: slideIn 2s;
+    }
+
+    .overlay-text p {
+        font-size: 1.5rem;
+    }
+</style>
+
+<div class="container mt-2">
+    <div class="p-5 text-center rounded-3 mx-auto position-relative">
+        <img src="{% static 'logos/tanauan.jpg' %}" class="d-block mx-auto img-fluid rounded-3"
+            alt="Municipality of Tanauan" loading="lazy" style="opacity: 0.6;">
+        <div class="overlay-text">
+            <h1 class="text-body-emphasis mt-2 fs-2 fw-bold">City Government of Tanauan</h1>
+
+            <p class="col-lg-8 mx-auto fs-5 mt-2 mb-5 ">
+                Nagkakaisang mga Lingkod Bayan para sa isang Bago at Maunlad na Lungsod ng Tanauan!
+            </p>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-light py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h5 class="mb-3">Contact Information</h5>
+                <p class="mb-2"><i class="bi bi-geo-alt-fill me-2"></i>City Government of Tanauan, Province of Batangas
+                </p>
+                <p class="mb-2"><i class="bi bi-telephone-fill me-2"></i>+43 7289 800</p>
+                <p class="mb-2"><i class="bi bi-envelope-fill me-2"></i>info@tanauancity.gov.ph</p>
+            </div>
+
+            <div class="col-lg-4 text-center">
+                <h5 class="mb-3">Connect with us</h5>
+                <ul class="list-unstyled social-media">
+                    <li><a href="https://www.facebook.com/TanauanCityGovernment"><i class="bi bi-facebook"></i></a></li>
+
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-lg-12">
+                <p class="text-center text-muted small mb-0">City Government of Tanauan &copy; 2023. All Rights
+                    Reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+{% endblock %}
