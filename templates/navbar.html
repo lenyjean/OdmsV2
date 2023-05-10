@@ -23,23 +23,19 @@
       <div class="offcanvas-body ">
         <ul class="navbar-nav mt-2 justify-content-sm-end  flex-grow-1 pe-3 col-lg-auto">
           <li class="nav-item ">
-            <a class="nav-link px-2 text-primary" aria-current="page" href="{% url 'homepage' %}" style="{{ home_state }}">Home</a>
+            <a class="nav-link px-2 text-primary" aria-current="page" href="{% url 'homepage' %}">Home</a>
           </li>
           {% if user.is_admin %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle px-2 text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle px-2 text-white" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false">
              Category
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href=""><i class="bi bi-intersect"></i>&nbsp;&nbsp;Document Type</a></li>
+              <li><a class="dropdown-item" href="{% url 'category-list' %}"><i class="bi bi-intersect"></i>&nbsp;&nbsp;Document Type</a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><a class="dropdown-item" href=""><i class="bi bi-briefcase-fill"></i>&nbsp;&nbsp;Department/Office</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-              <li><a class="dropdown-item" href=""><i class="bi bi-clock-history"></i>&nbsp;&nbsp;Document Status</a></li>
+              <li><a class="dropdown-item" href="{% url 'department-list' %}"><i class="bi bi-briefcase-fill"></i>&nbsp;&nbsp;Department/Office</a></li>             
             </ul>
           </li>
           {% endif %}
@@ -49,12 +45,18 @@
             </a>
             <ul class="dropdown-menu ">
               <li>
-                <a class="dropdown-item " href="">
+                <a class="dropdown-item " href="{% url 'outgoing-list' %}">
                   <i class="bi bi-cloud-arrow-up"></i>&nbsp;&nbsp;Outgoing Documents
-                
                 </a>
               </li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
               <li><a class="dropdown-item" href=""><i class="bi bi-cloud-arrow-down"></i>&nbsp;&nbsp;Incoming Documents</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href=""><i class="bi bi-clock-history"></i>&nbsp;&nbsp;Document Status</a></li>
             </ul>
           </li>
           {% if user.is_admin %}

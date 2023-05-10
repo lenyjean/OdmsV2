@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'crispy_bootstrap5'
 ]
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -88,9 +91,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': "railway",
         'USER': "postgres",
-        'PASSWORD': "VCmKGaJbuQB0JC7vVs4o",
-        'HOST': "containers-us-west-208.railway.app",
-        'PORT':  "6116"
+        'PASSWORD': "hIbtxysp2wjtBR2vftAd",
+        'HOST': "containers-us-west-22.railway.app",
+        'PORT':  "6810"
     }
 }
 

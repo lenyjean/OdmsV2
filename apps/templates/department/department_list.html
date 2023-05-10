@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-2">
+    <div class="card shadow-lg">
+        <div class="card-body m-3 p-3">
+            <div class="mb-5">
+                <div class="px-3 py-2 mb-3 float-end">
+                    <div class="container d-flex flex-wrap justify-content-center">
+                        <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search" method="get" action=""
+                            id="search-form" onsubmit="myFunction(); return false;">
+                            <div class="input-group">
+                                <input type="search" class="form-control" placeholder="What are you looking for?"
+                                    aria-label="Search" style="width: 250px;" id="search-input">
+                                <button class="btn btn-outline-primary" type="button" id="search-button">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <a href="{% url 'department-add' %}" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" style="width:23px; height:23px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                    </svg>
+                    Add new
+                </a>
+
+
+                <div class="table-responsive mx-auto mt-5">
+                    <table class="table" id="categoryTable">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">#</th>
+                                <th scope="col" class="text-center">Department</th>
+                                <th scope="col" class="text-center">Created at</th>
+                                <th scope="col" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        {% for list in office %}
+                        <tr>
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td class="text-center">{{ list.department }}</td>
+                            <td class="text-center">{{ list.created_at }}</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-danger btn-sm" style="height: 32px; width:32px;"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                    onclick="setID('{{ list.id }}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </td>
+                            {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">No department available</td>
+                        </tr>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    <div id="no-data-found-msg" class="text-center fw-semibold" style="display:none;">
+                        Sorry, no results found.
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-column-reverse flex-sm-row justify-content-sm-end align-items-center m-3">
+                <div class="d-inline-flex">
+                    {% if department.has_previous %}
+                    <a href="?page={{ department.previous_page_number }}"
+                        class="btn btn-outline-secondary rounded-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z">
+                            </path>
+                        </svg>&nbsp;Previous
+                    </a>
+                    {% else %}
+                    <button type="button" disabled class="btn btn-outline-secondary rounded-start disabled">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z">
+                            </path>
+                        </svg>&nbsp;Previous
+                    </button>
+                    {% endif %}
+
+                    {% for num in department.paginator.page_range %}
+                    {% if department.number == num %}
+                    <button type="button" class="btn btn-primary">
+                        {{ num }}
+                    </button>
+                    {% elif num > department.number|add:-3 and num < department.number|add:3 %} <a
+                        href="?page={{ num }}" class="btn btn-outline-secondary">
+                        {{ num }}
+                        </a>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if department.has_next %}
+                        <a href="?page={{ department.next_page_number }}" class="btn btn-outline-secondary rounded-end">
+                            Next&nbsp;
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z">
+                                </path>
+                            </svg>
+                        </a>
+                        {% else %}
+                        <button type="button" disabled class="btn btn-outline-secondary rounded-end disabled">
+                            Next&nbsp;
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z">
+                                </path>
+                            </svg>
+                        </button>
+                        {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete a department</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this department?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="" id="removeCat" type="button" class="btn btn-danger">Confirm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setID(id) {
+            document.getElementById("removeCat").href = '/department/delete/' + id;
+        }
+    </script>
+    <!-- search form javascript -->
+    <script>
+        // Get references to the DOM elements
+        const searchInput = document.getElementById("search-input");
+        const searchButton = document.getElementById("search-button");
+        const table = document.getElementById("categoryTable");
+        const noDataFoundMsg = document.getElementById("no-data-found-msg");
+        const searchForm = document.getElementById("search-form");
+        searchForm.addEventListener("submit", (event) => {
+            event.preventDefault(); // prevent the form from submitting normally
+            myFunction(); // call your search function
+        });
+
+
+        // Define a function to filter the table rows
+        function myFunction() {
+            const filter = searchInput.value.trim().toLowerCase();
+            const rows = table.querySelectorAll("tbody tr");
+
+            let rowsDisplayed = 0;
+
+            rows.forEach((row) => {
+                const columns = Array.from(row.querySelectorAll("td"));
+                const rowText = columns.map((column) => column.textContent.toLowerCase());
+                const words = filter.split(" ");
+
+                const matchesFilter = words.every((word) =>
+                    rowText.some((text) => text.includes(word))
+                );
+
+                if (matchesFilter) {
+                    row.style.display = "";
+                    rowsDisplayed++;
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+            // Show "No data found" message if there are no rows displayed
+            noDataFoundMsg.style.display = rowsDisplayed === 0 ? "block" : "none";
+        }
+
+        // Add event listeners to the search input and button
+        searchInput.addEventListener("input", myFunction);
+        searchButton.addEventListener("click", myFunction);
+    </script>
+    <!-- end script -->
+
+
+    {% endblock %}

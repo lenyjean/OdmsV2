@@ -48,14 +48,14 @@ class User(AbstractUser):
     is_employee = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     objects = CustomUserManager()
-    # department = models.OneToOneField("Department", on_delete=models.SET_NULL, null=True)
+    department = models.ForeignKey("Department", on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
 
     def __str__(self):
-        return self.department
+        return self.employee_no
 
 class Category(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -73,8 +73,8 @@ class Category(models.Model):
 class OutgoingDocs(models.Model):
     docs_status = (
         ('Pending', 'Pending'),
-        ('Received', 'Received'),
-        ('Released', 'Released'),
+        ('Forwarded', 'Forwarded'),
+        ('Denied', 'Denied'),
     )
     docs_actions = (
         ("Approved", "Approved"),
@@ -85,18 +85,65 @@ class OutgoingDocs(models.Model):
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tracking_no = models.CharField(max_length=255, unique=True)
+    title_docs = models.CharField(max_length=255, verbose_name="Title of the Document")
     type_of_document = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    document = models.FileField(upload_to="documents")
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=255, default="Pending", choices=docs_status)
-    forwarded_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="forwarded_to")
-    date_forwarded = models.DateTimeField(null=True, blank=True)
+    forwarded_to = models.ForeignKey("Department", on_delete=models.SET_NULL, null=True, related_name="forwarded_to")
+    date_forwarded = models.DateTimeField(auto_now_add=True)
     tracking_details = models.JSONField(null=True, blank=True)
     doc_actions = models.CharField(max_length=255, default="No Action", choices=docs_actions)
 
     class Meta:
-        verbose_name = 'Outgoing Doc'
-        verbose_name_plural = 'Outgoing Docs'
+        verbose_name = 'Outgoing Document'
+        verbose_name_plural = 'Outgoing Documents'
 
     def __str__(self):
         return self.tracking_no
+
+class IncomingDocs(models.Model):
+    choices_status = (
+        ('Pending', 'Pending'),
+        ('Forwarded', 'Forwarded'),
+        ('Denied', 'Denied'),
+    )
+    actions = (
+        ("Approved", "Approved"),
+        ("Disapproved", "Disapproved"),
+        ("Signed", "Signed"),
+        ("Endorsed", "Endorsed"),
+        ("No Action", "No Action"),    
+    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tracking_no = models.CharField(max_length=255, unique=True)
+    title_docs = models.CharField(max_length=255, verbose_name="Title of the Document")
+    type_of_document = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    document = models.FileField(upload_to="documents")
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=255, default="Pending", choices=choices_status)
+    forwarded_to = models.ForeignKey("Department", on_delete=models.SET_NULL, null=True, related_name="received_by")
+    date_forwarded = models.DateTimeField(auto_now_add=True)
+    tracking_details = models.JSONField(null=True, blank=True)
+    doc_actions = models.CharField(max_length=255, default="No Action", choices=actions)
+
+    class Meta:
+        verbose_name = 'Incoming Document'
+        verbose_name_plural = 'Incoming Documents'
+
+    def __str__(self):
+        return self.tracking_no
+
+
+class Department(models.Model):
+    department = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Department'
+        verbose_name_plural = 'Departments'
+
+    def __str__(self):
+        return self.department
