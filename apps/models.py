@@ -91,10 +91,10 @@ class OutgoingDocs(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=255, default="Pending", choices=docs_status)
-    forwarded_to = models.ForeignKey("Department", on_delete=models.SET_NULL, null=True, related_name="forwarded_to")
+    forwarded_to = models.ForeignKey("Department", on_delete=models.SET_NULL, null=True, related_name="forwarded_to", verbose_name="Forwarded To:")
     date_forwarded = models.DateTimeField(auto_now_add=True)
     tracking_details = models.JSONField(null=True, blank=True)
-    doc_actions = models.CharField(max_length=255, default="No Action", choices=docs_actions)
+    doc_actions = models.CharField(max_length=255, default="No Action", choices=docs_actions, verbose_name="Document Actions:")
 
     class Meta:
         verbose_name = 'Outgoing Document'

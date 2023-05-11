@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container-lg shadow-lg p-5">
+    <div class="row justify-content-center mt-5 mb-5">
+        <div class="col-sm col-md-6 col-lg-6">
+            <div class="card shadow rounded p-3">
+                {% for detail in list_docs %}
+                <div class="card-title">
+                    <p class="fs-5 fw-semibold">Release Document </p>
+                    <p class="fs-5 fw-semibold">Tracking No. {{ detail.tracking_no }} </p>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        {{ form|crispy }}
+
+                        <div class="d-inline-block ms-auto mt-3">
+                            <a href="{% url 'outgoing-list' %}" type="button"
+                                class="btn btn-secondary btn-md px-3 py-2.5 me-2 mb-2">
+                                Close
+                            </a>
+                            <button type="button" class="btn btn-primary btn-md mr-2 mb-2" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal">
+                                Release
+                            </button>
+                        </div>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Release Confirmation</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>You are about to release this document, continue?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary btn-md mr-2 mb-2">OK</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+
+    </div>
+    <!-- Modal -->
+
+</div>
+{% endblock %}

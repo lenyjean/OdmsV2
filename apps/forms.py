@@ -30,6 +30,11 @@ class OutgoingDocsForm(forms.ModelForm):
             raise ValidationError("Only PDF files are allowed.")
         return document
 
+class ReleaseForm(forms.ModelForm): 
+    class Meta:
+        model = OutgoingDocs
+        fields = ['doc_actions', 'forwarded_to']
+
 class CategoryForm(forms.ModelForm):
     category =  forms.CharField(label="Document Type")
     
@@ -37,8 +42,7 @@ class CategoryForm(forms.ModelForm):
         model = Category
         fields = '__all__'
    
-class DepartmentForm(forms.ModelForm):
-    
+class DepartmentForm(forms.ModelForm):  
     class Meta:
         model = Department
         fields = '__all__'

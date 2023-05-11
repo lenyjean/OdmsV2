@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -73,6 +73,18 @@ def view_outgoing(request, pk):
     }
     return render(request, template_name, context)
 
+# def update_outgoing(request,pk):
+#     template_name = 'outgoing_docs/update_outgoing.html'
+#     document = get_object_or_404(OutgoingDocs, id=pk)
+#     form = OutgoingDocsForm(request.POST or None, instance=document)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('outgoing-list')
+#     context = {
+#         "form": form
+#     }
+#     return render(request, template_name, context)
+
 def incoming_docs(request):
     template_name = 'incoming_docs/incoming.html'
     inc_document = IncomingDocs.objects.all().order_by('-date_created')
@@ -81,6 +93,22 @@ def incoming_docs(request):
     }
     return render(request, template_name, context)
 
+def release_docs(request,pk):
+    template_name = 'incoming_docs/release.html'
+    document = get_object_or_404(OutgoingDocs, id=pk)
+    list_docs = OutgoingDocs.objects.filter(id=pk)
+    form = ReleaseForm(request.POST or None, instance=document)
+    actions = request.POST.get('doc_actions')
+    if request.method == 'POST':
+        obj = form.save(commit=False)
+        obj.status = "Forwarded" if actions == "Forwarded" else  ("Pending" if actions == "Pending" else "Denied")  
+        obj.save()
+        return redirect('outgoing-list')
+    context = {
+        "form": form,
+        "list_docs": list_docs
+    }
+    return render(request, template_name, context)
 
 def category(request):
     template_name = 'category/category_list.html'
