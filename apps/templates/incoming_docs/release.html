@@ -2,21 +2,20 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<div class="container-lg shadow-lg p-5">
+<div class="container-lg shadow-lg mt-2 p-3">
     <div class="row justify-content-center mt-5 mb-5">
         <div class="col-sm col-md-6 col-lg-6">
             <div class="card shadow rounded p-3">
                 {% for detail in list_docs %}
                 <div class="card-title">
-                    <p class="fs-5 fw-semibold">Release Document </p>
+                    <p class="fs-6 fw-semibold">Release Document </p>
                     <p class="fs-5 fw-semibold">Tracking No. {{ detail.tracking_no }} </p>
                 </div>
                 <div class="card-body">
                     <form method="POST" enctype='multipart/form-data'>
                         {% csrf_token %}
                         {{ form|crispy }}
-
-                        <div class="d-inline-block ms-auto mt-3">
+                        <div class="d-inline-block  mt-3 float-end">
                             <a href="{% url 'outgoing-list' %}" type="button"
                                 class="btn btn-secondary btn-md px-3 py-2.5 me-2 mb-2">
                                 Close

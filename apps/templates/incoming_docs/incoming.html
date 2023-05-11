@@ -46,8 +46,8 @@
                     <td class="text-center">{{ list.date_forwarded }}</td>
                     <td class="text-center">
                         <p><a href="#" class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">ACCEPT</a></p>
-                        <p><a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">DOWNLOAD</a></p>
-                        <p><a href="#" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">RELEASE</a></p>
+                        <p><a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" download>DOWNLOAD</a></p>
+                        <p><a href="{% url 'incoming-release' list.id %}" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">RELEASE</a></p>
                     </td>
                     {% empty %}
                 <tr>
