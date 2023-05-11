@@ -2,6 +2,7 @@ from django import forms
 from .models import *
 from django.core.exceptions import ValidationError
 
+#form for login
 class LoginForm(forms.Form):
     employee_no = forms.CharField(label='Employee No')
     password = forms.CharField(
@@ -13,6 +14,7 @@ class LoginForm(forms.Form):
     class Meta:
         fields = ['employee_no', 'password']
 
+#form for outgoing documents
 class OutgoingDocsForm(forms.ModelForm):
     document = forms.FileField(
         label='Select a PDF file',
@@ -30,18 +32,27 @@ class OutgoingDocsForm(forms.ModelForm):
             raise ValidationError("Only PDF files are allowed.")
         return document
 
+#form for release of incoming documents
 class ReleaseForm(forms.ModelForm): 
     class Meta:
         model = OutgoingDocs
         fields = ['doc_actions', 'forwarded_to']
 
+#form for incoming documents    
+# class IncomingDocsForm(forms.ModelForm):
+#     class Meta:
+#         model = IncomingDocs
+#         fields = ['receiver', 'doc_actions']
+
+#form for document type
 class CategoryForm(forms.ModelForm):
     category =  forms.CharField(label="Document Type")
     
     class Meta:
         model = Category
         fields = '__all__'
-   
+
+#form for department
 class DepartmentForm(forms.ModelForm):  
     class Meta:
         model = Department

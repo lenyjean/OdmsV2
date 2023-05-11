@@ -1,15 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import *
+from .forms import *
 import uuid
 
 def_uuid = uuid.uuid4()
 gen_uuid = str(uuid.uuid4())[:8]
 
-# Create your views here.
+#functions for login
 def login_page(request):
     template_name = 'authentication/login.html'
     form = LoginForm(request.POST or None)
@@ -32,10 +32,12 @@ def login_page(request):
     }
     return render(request, template_name, context)
 
+#functions for logout
 def logout_page(request):
     logout(request)
     return redirect("/")
 
+#functions for homepage
 @login_required(login_url='/login')
 def homepage(request):
     template_name = 'homepage.html'
@@ -44,6 +46,7 @@ def homepage(request):
     }
     return render(request, template_name, context)
 
+#functions for outgoing documents
 def outgoing_docs(request):
     template_name = 'outgoing_docs/outgoing.html'
     document = OutgoingDocs.objects.all().order_by('-date_created')
@@ -72,28 +75,9 @@ def view_outgoing(request, pk):
         "document": document
     }
     return render(request, template_name, context)
-
-# def update_outgoing(request,pk):
-#     template_name = 'outgoing_docs/update_outgoing.html'
-#     document = get_object_or_404(OutgoingDocs, id=pk)
-#     form = OutgoingDocsForm(request.POST or None, instance=document)
-#     if form.is_valid():
-#         form.save()
-#         return redirect('outgoing-list')
-#     context = {
-#         "form": form
-#     }
-#     return render(request, template_name, context)
-
-def incoming_docs(request):
-    template_name = 'incoming_docs/incoming.html'
-    inc_document = IncomingDocs.objects.all().order_by('-date_created')
-    context = {
-        "document": inc_document
-    }
-    return render(request, template_name, context)
-
-def release_docs(request,pk):
+    
+#functions for incoming documents
+def release_docs(request, pk):
     template_name = 'incoming_docs/release.html'
     document = get_object_or_404(OutgoingDocs, id=pk)
     list_docs = OutgoingDocs.objects.filter(id=pk)
@@ -101,7 +85,12 @@ def release_docs(request,pk):
     actions = request.POST.get('doc_actions')
     if request.method == 'POST':
         obj = form.save(commit=False)
-        obj.status = "Forwarded" if actions == "Forwarded" else  ("Pending" if actions == "Pending" else "Denied")  
+        if actions == 'Pending':
+            obj.status = 'Pending'
+        elif actions in ['Disapproved', 'No Action']:
+            obj.status = 'Denied'
+        elif actions in ['Approved', 'Signed', 'Endorsed']:
+            obj.status = 'Forwarded'
         obj.save()
         return redirect('outgoing-list')
     context = {
@@ -110,6 +99,7 @@ def release_docs(request,pk):
     }
     return render(request, template_name, context)
 
+#functions for document type
 def category(request):
     template_name = 'category/category_list.html'
     category = Category.objects.all()
@@ -129,6 +119,7 @@ def add_category(request):
     }
     return render(request, template_name, context)
 
+#functions for department
 def department(request):
     template_name = 'department/department_list.html'
     office = Department.objects.all()

@@ -18,18 +18,6 @@
                     </form>
                 </div>
             </div>
-
-            <div class="mb-5">
-                <a href="{% url 'outgoing-add' %}" class="btn btn-primary">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" style="width:23px; height:23px;">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-                    </svg>
-
-                    Add new document
-                </a>
-            </div>
-
             <table class="table" id="docuTable">
                 <thead>
                     <tr>
@@ -45,7 +33,7 @@
                         <th scope="col" class="text-center">Actions</th>
                     </tr>
                 </thead>
-                {% for list in document %}
+                {% for list in documents %}
                 <tr>
                     <td class="text-center">{{ forloop.counter }}</td>
                     <td class="text-center">{{ list.tracking_no }}</td>
@@ -53,27 +41,27 @@
                     <td class="text-center">{{ list.type_of_document }}</td>
                     <td class="text-center">{{ list.user }}</td>
                     <td class="text-center">{{ list.date_created }}</td>
-                    <td class="text-center">
-                        {% if list.status == 'Pending' %}
-                            <span class="badge text-bg-primary">{{ list.status }}</span>
-                        {% elif list.status == 'Denied' %}
-                            <span class="badge text-bg-danger">{{ list.status }}</span>
-                        {% elif list.status == 'Forwarded' %}
-                            <span class="badge text-bg-success">{{ list.status }}</span>
-                        {% endif %}
-                    </td>
+                    <td class="text-center">{{ list.status }}</td>
                     <td class="text-center">{{ list.forwarded_to }}</td>
-                    <td class="text-center">{{ list.date_forwarded }}</td>     
+                    <td class="text-center">{{ list.date_forwarded }}</td>
+                    <td class="text-center"><form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="document_id" value="{{ document.id }}">
+                        <select name="department_id">
+                          {% for department in departments %}
+                            <option value="{{ department.id }}">{{ department.department }}</option>
+                          {% endfor %}
+                        </select>
+                        <button type="submit">Receive</button>
+                      </form>
+                    </td>
                     <td class="text-center">
-                        <p><a href="{% url 'outgoing-view' list.id %}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">VIEW</a></p>
-                        <p><a href="#" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">TRACK</a></p>
-                        <p><a href="{% url 'incoming-release' list.id %}" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">RELEASE</a></p>
+                        <p><a href="#" class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">ACCEPT</a></p>
+                        <p><a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">DOWNLOAD</a></p>
+                        <p><a href="#" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">RELEASE</a></p>
                     </td>
                     {% empty %}
-                <tr>
-                    <td colspan="10" class="text-center">No document available</td>
-                </tr>
-
+                    <tr><td colspan="10" class="text-center">No document available</td></tr>
                 </tr>
                 {% endfor %}
             </table>
@@ -140,6 +128,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- search form javascript -->
 <script>

@@ -36,9 +36,8 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
         return self.create_user(employee_no, password, **extra_fields)
 
-
+#model for user
 class User(AbstractUser):
-
     USERNAME_FIELD = 'employee_no'# changes email to unique and blank to false
     REQUIRED_FIELDS = []  # removes email from REQUIRED_FIELDS
     username = models.CharField(max_length=255, null=True, blank=True)
@@ -57,6 +56,7 @@ class User(AbstractUser):
     def __str__(self):
         return self.employee_no
 
+#model for document type
 class Category(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     category = models.CharField(max_length=255, unique=True)
@@ -69,7 +69,7 @@ class Category(models.Model):
     def __str__(self):
         return self.category 
 
-
+#model for outgoing documents
 class OutgoingDocs(models.Model):
     docs_status = (
         ('Pending', 'Pending'),
@@ -103,6 +103,7 @@ class OutgoingDocs(models.Model):
     def __str__(self):
         return self.tracking_no
 
+#model for incoming documents
 class IncomingDocs(models.Model):
     choices_status = (
         ('Pending', 'Pending'),
@@ -124,7 +125,7 @@ class IncomingDocs(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=255, default="Pending", choices=choices_status)
-    forwarded_to = models.ForeignKey("Department", on_delete=models.SET_NULL, null=True, related_name="received_by")
+    receiver = models.ForeignKey("Department", on_delete=models.SET_NULL, null=True, related_name="received_by")
     date_forwarded = models.DateTimeField(auto_now_add=True)
     tracking_details = models.JSONField(null=True, blank=True)
     doc_actions = models.CharField(max_length=255, default="No Action", choices=actions)
@@ -134,9 +135,9 @@ class IncomingDocs(models.Model):
         verbose_name_plural = 'Incoming Documents'
 
     def __str__(self):
-        return self.tracking_no
+        return self.receiver
 
-
+#model for department
 class Department(models.Model):
     department = models.CharField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
