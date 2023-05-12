@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-    <div class="row justify-content-center mx-auto mt-3">
+    <div class="row justify-content-center mx-auto mt-2">
         <div class="col-sm-2 col-md-6 col-lg-6">
             <div class="card p-3 shadow mt-5">
                 <!-- {% for message in messages %}
@@ -17,8 +17,8 @@
                     <div class="text-center">
                         <img src="{% static 'logos/tanauan_logo.jpg' %}" class="rounded mx-auto d-block mb-3"
                             alt="Tanauan Logo" style="height: 120px; width: 120px;">
-                        <h5 class="mt-4 mb-3 fs-4 fw-semibold">Welcome to City Government of Tanauan
-                        <p class="mt-1 mb-4 fs-6 fw-semibold">Online Document Management System</p>
+                        <h5 class="text-center mt-4 mb-3 fs-4 fw-normal">Welcome to City Government of Tanauan
+                        <p class=" mt-1 mb-4 fs-6 fw-light">Online Document Management System</p>
                     </div>
                     <form method="POST" class="form-signin">
                         {% csrf_token %}

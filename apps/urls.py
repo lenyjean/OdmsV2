@@ -2,8 +2,12 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
+    #urls for login and logout
     path('login', login_page, name='login'),
-    path('home', homepage, name='homepage'),
+    path('logout', logout_page, name='logout'),
+
+    #urls for homepage
+    path('', homepage, name='homepage'),
     
     #urls for outgoing documents
     path('outgoing-documents/list', outgoing_docs, name='outgoing-list'),
