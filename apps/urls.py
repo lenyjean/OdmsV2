@@ -25,4 +25,13 @@ urlpatterns = [
     path('department/list', department, name='department-list'),
     path('department/add', add_department, name='department-add'),
 
+    #urls for user
+    path('user/list', account, name='user-list'),
+    path('user/add', add_account, name='user-add'),
+    path('user/view/<str:pk>', view_account, name='user-view'),
+    path('user/update/<str:pk>', update_account, name='user-update'),
+    path('user/profile', profile, name='user-profile'),
+    path('user/change-password', password_update, name='user-update-password'),
+
+
 ]

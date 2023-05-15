@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container-lg shadow-lg p-5">
+    <a href="{% url 'user-list' %}" class="text-decoration-none">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+        </svg>
+        Back to accounts
+    </a>
+    <div class="row justify-content-center mt-5 mb-5">
+        <div class="col-sm col-md-6 col-lg-6">
+            <div class="card shadow rounded p-3">
+                {% for detail in account %}
+                <div class="py-4 row row-cols-1 row-cols-md-3 gap-4 align-items-center">
+                    <!-- <div class="col">
+                        <p class="text-sm fw-semibold">Profile Picture</p>
+                    </div> -->
+                    <div class="col-md-8 d-flex justify-content-center align-items-center mx-auto">
+                        {% if detail.profile_picture.url %}
+                        <img class="rounded mx-auto d-block" src="{{ detail.profile_picture.url }}"
+                            alt="Profile Picture" width="230" height="230" />
+                        {% else %}
+                        <p class="mt-1 text-sm text-gray-900 font-normal text-end">No profile picture found</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td><span class="fw-semibold">Full Name:</span></td>
+                                <td>{{ detail.first_name }}{{ detail.middle_name }} {{ detail.last_name }}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="fw-semibold">Employee Number:</span></td>
+                                <td>{{detail.employee_no}}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="fw-semibold">Contact Number:</span></td>
+                                <td>{{detail.contact}}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="fw-semibold">User Type:</span></td>
+                                <td>{% if detail.is_admin %}
+                                    <span class="badge bg-primary">Admin</span>
+                                    {% elif detail.is_employee %}
+                                    <span class="badge bg-secondary">Employee</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Not Available</span>
+                                    {% endif %}
+                                </td>  
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+                <div class="d-inline-block ms-auto mt-3">
+                    <a href="{% url 'user-update' detail.id %}" type="submit"
+                        class="btn btn-primary btn-md  px-3 py-2.5 me-2 mb-2">
+                        Update
+                    </a>
+                    <a href="{% url 'user-list' %}" type="button"
+                        class="btn btn-secondary btn-md  px-3 py-2.5 me-2 mb-2">
+                        Cancel
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

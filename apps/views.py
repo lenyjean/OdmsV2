@@ -1,15 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.contrib import messages
 from .models import *
 from .forms import *
+
 import uuid
 
 def_uuid = uuid.uuid4()
 gen_uuid = str(uuid.uuid4())[:8]
 
-#functions for login
+#functions for LOGIN
 def login_page(request):
     template_name = 'authentication/login.html'
     form = LoginForm(request.POST or None)
@@ -22,9 +24,7 @@ def login_page(request):
         # print(user)
         if user is not None:
             login(request, user)
-            messages.success(request, "You have been logged in successfully.")
-            return redirect("homepage")
-           
+            return redirect("homepage")   
         else:
             messages.error(request, "Invalid employee no. or password")           
     context = {
@@ -32,12 +32,13 @@ def login_page(request):
     }
     return render(request, template_name, context)
 
-#functions for logout
+#functions for LOGOUT
 def logout_page(request):
     logout(request)
+    messages.success(request, "You have successfully logged out.")
     return redirect("/")
 
-#functions for homepage
+#functions for HOMEPAGE
 @login_required(login_url='/login')
 def homepage(request):
     template_name = 'homepage.html'
@@ -46,12 +47,64 @@ def homepage(request):
     }
     return render(request, template_name, context)
 
-#functions for outgoing documents
+#CATEGORY
+#functions for DOCUMENT TYPE/CATEGORY
+def category(request):
+    template_name = 'category/category_list.html'
+    category = Category.objects.all().order_by('-created_at')
+    paginator = Paginator(category, 10)
+    page_number = request.GET.get('page')
+    category = paginator.get_page(page_number)
+    context = {
+        "category": category,
+        "category_state": "background-color: rgba(212, 210, 210, 1);  color: #fff;",
+    }
+    return render(request, template_name, context)
+
+def add_category(request):
+    template_name = 'category/add_category.html'
+    form = CategoryForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        form.save()
+        return redirect('category-list')
+    context = {
+        "form": form
+    }
+    return render(request, template_name, context)
+
+#functions for DEPARTMENT
+def department(request):
+    template_name = 'department/department_list.html'
+    office = Department.objects.all().order_by('-created_at')
+    paginator = Paginator(office, 10)
+    page_number = request.GET.get('page')
+    office = paginator.get_page(page_number)
+    context = {
+        "office": office
+    }
+    return render(request, template_name, context)
+
+def add_department(request):
+    template_name = 'department/add_department.html'
+    form = DepartmentForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        form.save()
+        return redirect('department-list')
+    context = {
+        "form": form
+    }
+    return render(request, template_name, context)
+
+#DOCUMENTS
+#functions for OUTGOING DOCUMENTS
 def outgoing_docs(request):
     template_name = 'outgoing_docs/outgoing.html'
     document = OutgoingDocs.objects.all().order_by('-date_created')
+    paginator = Paginator(document, 10)
+    page_number = request.GET.get('page')
+    document = paginator.get_page(page_number)
     context = {
-        "document": document
+        "document": document,
     }
     return render(request, template_name, context)
 
@@ -76,7 +129,7 @@ def view_outgoing(request, pk):
     }
     return render(request, template_name, context)
     
-#functions for incoming documents
+#functions for INCOMING DOCUMENTS
 def release_docs(request, pk):
     template_name = 'incoming_docs/release.html'
     document = get_object_or_404(OutgoingDocs, id=pk)
@@ -99,42 +152,104 @@ def release_docs(request, pk):
     }
     return render(request, template_name, context)
 
-#functions for document type
-def category(request):
-    template_name = 'category/category_list.html'
-    category = Category.objects.all()
+#functions for USER ACCOUNTS
+@login_required(login_url='/login')
+def account(request):
+    template_name = 'accounts/account_list.html'
+    account = User.objects.all().order_by('-date_joined')
+    paginator = Paginator(account, 10)
+    page_number = request.GET.get('page')
+    account = paginator.get_page(page_number)
     context = {
-        "category": category
+        "account": account,
+        "account_state": "background-color: rgba(212, 210, 210, 1);  color: #fff;",
     }
     return render(request, template_name, context)
 
-def add_category(request):
-    template_name = 'category/add_category.html'
-    form = CategoryForm(request.POST or None, request.FILES or None)
-    if form.is_valid():
-        form.save()
-        return redirect('category-list')
+@login_required(login_url='/login')
+def add_account(request):
+    template_name = 'accounts/add_account.html'
+    form = UserForm(request.POST or None, request.FILES or None)
+    department = request.POST.get("department")
+    department_name = Department.objects.filter(id=department).first()
+    if request.method == 'POST':
+        if form.is_valid():
+            user_account = form.save(commit=False)
+            user_type = request.POST['user_type']
+            print(request.POST['user_type'])
+            if user_type == "Admin":
+                user_account.is_admin = True
+            elif user_type == "Employee":
+                user_account.is_employee = True
+            password = form.cleaned_data.get('password1')
+            user_account.set_password(password)
+            user_account.save()
+            print("User account saved:", user_account)
+            return redirect('user-list')
+        else:
+            messages.error(request, f"Error adding new user. {form.errors}")
+            return redirect('/account/add')
     context = {
         "form": form
     }
     return render(request, template_name, context)
 
-#functions for department
-def department(request):
-    template_name = 'department/department_list.html'
-    office = Department.objects.all()
+@login_required(login_url='/login')
+def view_account(request,pk):
+    template_name = 'accounts/view_account.html'
+    account = User.objects.filter(id=pk)
     context = {
-        "office": office
+        "account": account
     }
     return render(request, template_name, context)
 
-def add_department(request):
-    template_name = 'department/add_department.html'
-    form = DepartmentForm(request.POST or None, request.FILES or None)
+@login_required(login_url='/login')
+def update_account(request, pk):
+    template_name = 'accounts/update_account.html'
+    account = get_object_or_404(User, id=pk)
+    form = UserUpdateForm(request.POST or None, request.FILES or None, instance=account)
     if form.is_valid():
         form.save()
-        return redirect('department-list')
+        return redirect('user-list')
     context = {
-        "form": form
+        "form": form,
+        "pk": pk
     }
     return render(request, template_name, context)
+
+
+#functions for PROFILE
+@login_required(login_url='/login')
+def profile(request):
+    pk = request.user.id
+    template_name = 'accounts/profile.html'
+    user_data = User.objects.filter(id=request.user.id)
+    context = {
+        "user_data": user_data,
+        "pk": pk
+    }
+    return render(request, template_name, context)
+
+#functions for CHANGE/UPDATE PASSWORD
+@login_required(login_url='/login')
+def password_update(request):
+    template_name = 'accounts/update_pass.html'
+    if request.method == "POST":
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+        if new_password != confirm_password:
+            messages.error(request, "Passwords doesn't match")
+        else:
+            try:
+                user = User.objects.get(id=request.user.id)
+                user.set_password(new_password)
+                user.save()
+                messages.success(request, 'Your password has been changed successfully.')
+                return redirect("/")
+            except User.DoesNotExist:
+                messages.error(request, "User doesn't exists")
+    context = {
+        "pk": request.user.id
+    }
+    return render(request, template_name, context)
+

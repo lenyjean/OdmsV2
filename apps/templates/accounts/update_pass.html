@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="card mt-2">
+        <div class="card-body p-4">
+            <h3 class="fs-6 fw-semibold mt-2 mb-2">The action you are performing is changing or modifying your password.
+            </h3>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group mt-3">
+                    <label for="new-password">New Password</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="new-password" name="new_password">
+                        <button type="button" class="btn btn-outline-secondary toggle-password"
+                            data-target="#new-password">
+                            <i class="bi bi-eye-slash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="confirm-password">Confirm Password</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="confirm-password" name="confirm_password">
+                        <button type="button" class="btn btn-outline-secondary toggle-password rounded-end"
+                            data-target="#confirm-password">
+                            <i class="bi bi-eye-slash"></i>
+                        </button>
+                        <div id="password-match" class="invalid-feedback" style="display: none;">Passwords do not match.
+                        </div>
+                    </div>
+                </div>
+                <div class="d-inline-block ml-auto mt-4 float-end">
+                    <button type="submit" class="btn btn-primary btn-md mr-2 mb-2">
+                        Update Password
+                    </button>
+                    <a href="{% url 'user-profile' %}" type="button" class="btn btn-secondary btn-md mr-2 mb-2">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get all the toggle password buttons
+    const togglePasswordButtons = document.querySelectorAll('.toggle-password');
+
+    // Get the password fields
+    const newPasswordField = document.getElementById('new-password');
+    const confirmPasswordField = document.getElementById('confirm-password');
+
+    // Get the password match message element
+    const passwordMatchMessage = document.getElementById('password-match');
+
+    // Add a click event listener to the toggle password buttons
+    togglePasswordButtons.forEach(button => {
+        // Get the target password input field
+        const passwordField = document.querySelector(button.dataset.target);
+
+        button.addEventListener('click', () => {
+            // Toggle the password field's type attribute between "password" and "text"
+            passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+
+            // Toggle the eye icon's class between "bi-eye-slash" and "bi-eye"
+            button.firstElementChild.classList.toggle('bi-eye-slash');
+            button.firstElementChild.classList.toggle('bi-eye');
+        });
+    });
+
+    // Add a change event listener to the confirm password field
+    confirmPasswordField.addEventListener('input', () => {
+        // Check if the confirm password matches the new password
+        const passwordsMatch = newPasswordField.value === confirmPasswordField.value;
+
+        // Show or hide the password match message based on whether the passwords match
+        passwordMatchMessage.style.display = passwordsMatch ? 'none' : 'block';
+    });
+</script>
+{% endblock %}

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-
+from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
+import re
 import uuid
 # Create your models here.
 class CustomUserManager(BaseUserManager):
@@ -43,7 +45,8 @@ class User(AbstractUser):
     username = models.CharField(max_length=255, null=True, blank=True)
     employee_no = models.CharField(max_length=255, unique=True)
     profile_picture = models.ImageField(upload_to="profile_picture", default='default.png')
-    contact = models.CharField(max_length=13)
+    phone_regex = RegexValidator(r'^\d{11}$', 'Phone number must be 11 digits long.')
+    contact = models.CharField(max_length=11, validators=[phone_regex])
     is_employee = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     objects = CustomUserManager()
@@ -55,6 +58,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.employee_no
+    
 
 #model for document type
 class Category(models.Model):
@@ -148,3 +152,4 @@ class Department(models.Model):
 
     def __str__(self):
         return self.department
+    

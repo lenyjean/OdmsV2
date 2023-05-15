@@ -1,27 +1,47 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="container-lg shadow-lg p-5">
-  <div class="row justify-content-center mt-5 mb-5">
+<div class="container-lg shadow-lg p-5 mt-2">
+  <div class="row justify-content-center mb-3">
     <div class="col-sm col-md-6 col-lg-6">
       <div class="card shadow rounded p-3">
         {% for detail in document %}
         <div class="card-title">
-          <p class="fs-5 fw-semibold">You are viewing the details of: </p>     
+          <p class="fs-6">These are the details for the <span class="fw-semibold">Tracking No. {{detail.tracking_no}}</span> </p> 
         </div>
         <div class="card-body">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item"><span class=" fw-semibold">Tracking #: </span>  {{detail.tracking_no}}</li>
-            <li class="list-group-item"><span class=" fw-semibold">Title of the Document: </span>  {{detail.title_docs}}</li>
-            <li class="list-group-item"><span class=" fw-semibold">Type of Document: </span>  {{detail.type_of_document}}</li>
-            <li class="list-group-item "><span class=" fw-semibold">Forwarded to: </span>  {{detail.forwarded_to}}</li>
-            <li class="list-group-item "><span class=" fw-semibold">Status: </span>  {{detail.status}}</li>
-            <li class="list-group-item"><span class=" fw-semibold">Created On: </span>  {{detail.date_created}}</li>
-            <li class="list-group-item"><span class=" fw-semibold">Uploaded By: </span>  {{detail.user}}</li>
-          </ul>
+          <table class="table">
+            <tbody>
+              <tr>
+                <td><span class="fw-semibold">Title of the Document:</span></td>
+                <td>{{detail.title_docs}}</td>
+              </tr>
+              <tr>
+                <td><span class="fw-semibold">Type of Document:</span></td>
+                <td>{{detail.type_of_document}}</td>
+              </tr>
+              <tr>
+                <td><span class="fw-semibold">Forwarded to:</span></td>
+                <td>{{detail.forwarded_to}}</td>
+              </tr>
+              <tr>
+                <td><span class="fw-semibold">Status:</span></td>
+                <td>{{detail.status}}</td>
+              </tr>
+              <tr>
+                <td><span class="fw-semibold">Created On:</span></td>
+                <td>{{detail.date_created}}</td>
+              </tr>
+              <tr>
+                <td><span class="fw-semibold">Uploaded By:</span></td>
+                <td>{{detail.user}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="d-inline-block ms-auto mt-3">
-          <a href="{% url 'outgoing-list' %}" type="button" class="btn btn-secondary btn-md rounded-pill px-3 py-2.5 me-2 mb-2">
+        
+        <div class="d-inline-block ms-auto mt-1">
+          <a href="{% url 'outgoing-list' %}" type="button" class="btn btn-secondary btn-md px-3 py-2.5 me-2 mb-2">
             Close
           </a>
         </div>
