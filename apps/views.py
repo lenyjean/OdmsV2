@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.contrib import messages
+from django.db.models import Q
 from .models import *
 from .forms import *
 
@@ -10,6 +11,16 @@ import uuid
 
 def_uuid = uuid.uuid4()
 gen_uuid = str(uuid.uuid4())[:8]
+
+
+def create_tracking(office, status, action, comment, docs):
+    Tracking.objects.create(
+        office = office,
+        status=status,
+        action = action,
+        comment = comment,
+        docs_id=docs
+    )
 
 #functions for LOGIN
 def login_page(request):
@@ -43,7 +54,7 @@ def logout_page(request):
 def homepage(request):
     template_name = 'homepage.html'
     context = {
-        "home_state": "background-color: rgba(212, 210, 210, 1);  color: #fff;",
+        "home_state": "color: #6366f1, font-weight: bold",
     }
     return render(request, template_name, context)
 
@@ -99,7 +110,7 @@ def add_department(request):
 #functions for OUTGOING DOCUMENTS
 def outgoing_docs(request):
     template_name = 'outgoing_docs/outgoing.html'
-    document = OutgoingDocs.objects.all().order_by('-date_created')
+    document = OutgoingDocs.objects.filter(Q(user__department = request.user.department)).order_by('-date_created')
     paginator = Paginator(document, 10)
     page_number = request.GET.get('page')
     document = paginator.get_page(page_number)
@@ -114,7 +125,9 @@ def add_outgoing(request):
     if form.is_valid():
         obj = form.save(commit=False)
         obj.tracking_no = gen_uuid
+        obj.user = request.user
         obj.save()
+        create_tracking(office=obj.forwarded_to, status=obj.status, action="", comment="", docs=obj.id)
         return redirect('outgoing-list')
     context = {
         "form": form
@@ -145,6 +158,7 @@ def release_docs(request, pk):
         elif actions in ['Approved', 'Signed', 'Endorsed']:
             obj.status = 'Forwarded'
         obj.save()
+        create_tracking(office=obj.forwarded_to, status=obj.status, action=actions, comment="", docs=obj.id)
         return redirect('outgoing-list')
     context = {
         "form": form,
@@ -253,3 +267,27 @@ def password_update(request):
     }
     return render(request, template_name, context)
 
+
+@login_required(login_url='/login')
+def incoming_docs(request):
+    template_name= "incoming_docs/incoming.html"
+    user = User.objects.filter(id=request.user.id).first()
+    document = OutgoingDocs.objects.filter(forwarded_to = user.department).order_by('-date_created')
+    paginator = Paginator(document, 10)
+    page_number = request.GET.get('page')
+    document = paginator.get_page(page_number)
+    print(user.department)
+    context = {
+        "document": document,
+    }
+    return render(request, template_name, context)
+
+
+def tracking_list(request, pk):
+    template_name = "tracking/tracking_list.html"
+    tracking = Tracking.objects.filter(docs=pk).order_by("-created")
+
+    context = {
+        "tracking" : tracking
+    }  
+    return render(request, template_name, context)

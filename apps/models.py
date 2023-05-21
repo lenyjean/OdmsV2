@@ -38,6 +38,19 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
         return self.create_user(employee_no, password, **extra_fields)
 
+
+#model for department
+class Department(models.Model):
+    department = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Department'
+        verbose_name_plural = 'Departments'
+
+    def __str__(self):
+        return self.department
+    
 #model for user
 class User(AbstractUser):
     USERNAME_FIELD = 'employee_no'# changes email to unique and blank to false
@@ -50,7 +63,7 @@ class User(AbstractUser):
     is_employee = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     objects = CustomUserManager()
-    department = models.ForeignKey("Department", on_delete=models.SET_NULL, null=True)
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name = 'User'
@@ -95,7 +108,7 @@ class OutgoingDocs(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=255, default="Pending", choices=docs_status)
-    forwarded_to = models.ForeignKey("Department", on_delete=models.SET_NULL, null=True, related_name="forwarded_to", verbose_name="Forwarded To:")
+    forwarded_to = models.ForeignKey("Department", on_delete=models.SET_NULL, null=True,verbose_name="Forwarded To:")
     date_forwarded = models.DateTimeField(auto_now_add=True)
     tracking_details = models.JSONField(null=True, blank=True)
     doc_actions = models.CharField(max_length=255, default="No Action", choices=docs_actions, verbose_name="Document Actions:")
@@ -141,15 +154,17 @@ class IncomingDocs(models.Model):
     def __str__(self):
         return self.receiver
 
-#model for department
-class Department(models.Model):
-    department = models.CharField(max_length=255, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    
+
+class Tracking(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    status = models.CharField(max_length=255, default="RECEIVED")
+    created = models.DateTimeField(auto_now_add=True)
+    action = models.CharField(max_length=255)
+    comment = models.CharField(max_length=255)
+    office = models.CharField(max_length=255)
+    docs = models.ForeignKey(OutgoingDocs, on_delete=models.SET_NULL, blank=True, null=True)
 
     class Meta:
-        verbose_name = 'Department'
-        verbose_name_plural = 'Departments'
-
-    def __str__(self):
-        return self.department
-    
+        verbose_name = 'Tracking'
+        verbose_name_plural = 'Trackings'

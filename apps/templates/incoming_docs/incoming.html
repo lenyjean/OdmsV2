@@ -18,7 +18,7 @@
                     </form>
                 </div>
             </div>
-            <table class="table" id="docuTable">
+            <table class="table" id="docuTable" style="font-size: 14px;">
                 <thead>
                     <tr>
                         <th scope="col" class="text-center">#</th>
@@ -35,19 +35,18 @@
                 </thead>
                 {% for list in document %}
                 <tr>
-                    <td class="text-center">{{ forloop.counter }}</td>
-                    <td class="text-center">{{ list.tracking_no }}</td>
-                    <td class="text-center">{{ list.title_docs }}</td>
-                    <td class="text-center">{{ list.type_of_document }}</td>
-                    <td class="text-center">{{ list.user }}</td>
-                    <td class="text-center">{{ list.date_created }}</td>
-                    <td class="text-center">{{ list.status }}</td>
-                    <td class="text-center">{{ list.forwarded_to }}</td>
-                    <td class="text-center">{{ list.date_forwarded }}</td>
-                    <td class="text-center">
-                        <p><a href="#" class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">ACCEPT</a></p>
-                        <p><a href="#" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" download>DOWNLOAD</a></p>
-                        <p><a href="{% url 'incoming-release' list.id %}" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">RELEASE</a></p>
+                    <td class="text-center py-4">{{ forloop.counter }}</td>
+                    <td class="text-center py-4">{{ list.tracking_no }}</td>
+                    <td class="text-center py-4">{{ list.title_docs }}</td>
+                    <td class="text-center py-4">{{ list.type_of_document }}</td>
+                    <td class="text-center py-4">{{ list.user }}</td>
+                    <td class="text-center py-4">{{ list.date_created }}</td>
+                    <td class="text-center py-4">{{ list.status }}</td>
+                    <td class="text-center py-4">{{ list.forwarded_to }}</td>
+                    <td class="text-center py-4">{{ list.date_forwarded }}</td>
+                    <td class="text-center py-4" >
+                        <a href="#" download style="font-size: 12px;">ACCEPT - FILE DOWNLOAD</a><br>
+                        <a href="{% url 'incoming-release' list.id %}" style="font-size: 12px;">RELEASE</a>
                     </td>
                     {% empty %}
                 <tr>

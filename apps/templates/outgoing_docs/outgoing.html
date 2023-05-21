@@ -30,7 +30,7 @@
                 </a>
             </div>
 
-            <table class="table" id="docuTable">
+            <table class="table" id="docuTable" style="font-size: 14px;">
                 <thead>
                     <tr>
                         <th scope="col" class="text-center">#</th>
@@ -47,13 +47,13 @@
                 </thead>
                 {% for list in document %}
                 <tr>
-                    <td class="text-center">{{ forloop.counter }}</td>
-                    <td class="text-center">{{ list.tracking_no }}</td>
-                    <td class="text-center">{{ list.title_docs }}</td>
-                    <td class="text-center">{{ list.type_of_document }}</td>
-                    <td class="text-center">{{ list.user }}</td>
-                    <td class="text-center">{{ list.date_created }}</td>
-                    <td class="text-center">
+                    <td class="text-center py-4">{{ forloop.counter }}</td>
+                    <td class="text-center py-4">{{ list.tracking_no }}</td>
+                    <td class="text-center py-4">{{ list.title_docs }}</td>
+                    <td class="text-center py-4">{{ list.type_of_document }}</td>
+                    <td class="text-center py-4">{{ list.user }}</td>
+                    <td class="text-center py-4">{{ list.date_created }}</td>
+                    <td class="text-center py-4">
                         {% if list.status == 'Pending' %}
                             <span class="badge text-bg-primary">{{ list.status }}</span>
                         {% elif list.status == 'Denied' %}
@@ -62,15 +62,11 @@
                             <span class="badge text-bg-success">{{ list.status }}</span>
                         {% endif %}
                     </td>
-                    <td class="text-center">{{ list.forwarded_to }}</td>
-                    <td class="text-center">{{ list.date_forwarded }}</td>     
+                    <td class="text-center py-4">{{ list.forwarded_to }}</td>
+                    <td class="text-center py-4">{{ list.date_forwarded }}</td>     
                     <td class="text-center">
-                        <a href="{% url 'outgoing-view' list.id %}" type="button" class="btn btn-success btn-sm">VIEW</a></p>
-                        <a href="" type="button" class="btn btn-danger btn-sm">TRACK</a>
-
-                        <!-- this is for incoming document, I just put it here for testing -->
-                        <!-- <p><a href="{% url 'incoming-release' list.id %}" class="link-danger link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">RELEASE</a></p> -->
-                        <a href="{% url 'incoming-release' list.id %}" type="button" class="btn btn-danger btn-sm">RELEASE</a>
+                        <a href="{% url 'outgoing-view' list.id %}" style="font-size: 14px;">VIEW</a><br>
+                        <a href="/tracking/{{list.id}}" style="font-size: 14px;">TRACK</a><br>
                     </td>
                     {% empty %}
                 <tr>

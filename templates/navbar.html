@@ -26,11 +26,11 @@
       <div class="offcanvas-body ">
         <ul class="navbar-nav mt-2 justify-content-sm-end  flex-grow-1 pe-3 col-lg-auto">
           <li class="nav-item ">
-            <a class="nav-link px-2 text-primary {% if current_page == 'homepage' %}active{% endif %}" aria-current="page" href="{% url 'homepage' %}">Home</a>
+            <a class="nav-link px-2 {% if current_page == 'homepage' %}text-primary{% endif %}" aria-current="page" href="{% url 'homepage' %}">Home</a>
           </li>
           {% if user.is_admin %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle px-2 text-white {% if current_page == 'category-list' %}active{% endif %}" href="" role="button" data-bs-toggle="dropdown"
+            <a class="nav-link dropdown-toggle px-2 text-white {% if current_page == 'category-list' %}text-primary{% endif %}" href="" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
               Category
             </a>
@@ -46,13 +46,13 @@
           </li>
           {% endif %}
           <li class="dropdown">
-            <a class="nav-link dropdown-toggle px-2 text-white {% if current_page == 'outgoing-list' %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown"
+            <a class="nav-link dropdown-toggle px-2 text-white {% if current_page == 'outgoing-list' %}text-primary{% endif %}" href="#" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
               Documents
             </a>
             <ul class="dropdown-menu ">
               <li>
-                <a class="dropdown-item {% if current_page == 'outgoing-list' %}active{% endif %}" href="{% url 'outgoing-list' %}">
+                <a class="dropdown-item {% if current_page == 'outgoing-list' %}text-primary{% endif %}" href="{% url 'outgoing-list' %}">
                   <i class="bi bi-cloud-arrow-up"></i>&nbsp;&nbsp;Outgoing Documents
                 </a>
               </li>
@@ -60,7 +60,7 @@
                 <hr class="dropdown-divider">
               </li>
               <li>
-                <a class="dropdown-item {% if current_page == 'incoming-list' %}active{% endif %}" href="">
+                <a class="dropdown-item {% if current_page == 'incoming_docs' %}text-primary{% endif %}" href="/incoming-documents/list">
                   <i class="bi bi-cloud-arrow-down"></i>&nbsp;&nbsp;Incoming Documents
                 </a>
               </li>
@@ -79,7 +79,7 @@
           </li>
           {% if user.is_admin %}
           <li class="nav-item">
-            <a class="nav-link px-2 text-white {% if current_page == 'user-list' %}active{% endif %}" href="{% url 'user-list' %}">User Accounts</a>
+            <a class="nav-link px-2 text-white {% if current_page == 'user-list' %}text-primary{% endif %}" href="{% url 'user-list' %}">User Accounts</a>
           </li>&nbsp;&nbsp;&nbsp;&nbsp;
           {% endif %}
           <li class="nav-item">

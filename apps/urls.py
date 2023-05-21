@@ -17,6 +17,9 @@ urlpatterns = [
     #urls for incoming documents
     path('outgoing-documents/release/<str:pk>', release_docs, name='incoming-release'),
 
+    #urls for incoming documents
+    path("incoming-documents/list", incoming_docs, name="incoming_docs"),
+
     #urls for document type
     path('category/list', category, name='category-list'),
     path('category/add', add_category, name='category-add'),
@@ -33,5 +36,6 @@ urlpatterns = [
     path('user/profile', profile, name='user-profile'),
     path('user/change-password', password_update, name='user-update-password'),
 
+    path("tracking/<str:pk>", tracking_list, name="tracking_list")
 
 ]
