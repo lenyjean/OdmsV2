@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-e^o^m23sl03r@z!9p(lar0z=7w&u(&lueo%2m49c91!o=9b^!i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -44,6 +44,17 @@ INSTALLED_APPS = [
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+CSRF_TRUSTED_ORIGINS = [ 'https://odms.up.railway.app',  'https://*.up.railway.app', 'http://localhost:8000']
+
+
+# CSRF_COOKIE_DOMAIN = 'up.railway.app'
+
+CORS_ORIGIN_WHITELIST = (
+    'https://odms.up.railway.app',
+    'http://localhost:8000'
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
