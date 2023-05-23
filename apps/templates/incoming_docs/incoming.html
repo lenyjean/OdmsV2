@@ -45,8 +45,8 @@
                     <td class="text-center py-4">{{ list.forwarded_to }}</td>
                     <td class="text-center py-4">{{ list.date_forwarded }}</td>
                     <td class="text-center py-4" >
-                        <a href="{{list.document.url}}" download style="font-size: 12px;">ACCEPT - FILE DOWNLOAD</a><br>
-                        <a href="{% url 'incoming-release' list.id %}" style="font-size: 12px;">RELEASE</a>
+                        <a href="{{list.document.url}}" download  class="bg-primary py-1 text-white text-decoration-none rounded" style="font-size: 12px; padding: 0px 10px 0px 10px;">ACCEPT - FILE DOWNLOAD</a><br><br>
+                        <a href="{% url 'incoming-release' list.id %}"  class="bg-success py-1 px-4 text-white text-decoration-none rounded" style="font-size: 12px; padding: 0px 50px 0px 50px;">RELEASE</a>
                     </td>
                     {% empty %}
                 <tr>

@@ -39,6 +39,11 @@ class OutgoingDocsForm(forms.ModelForm):
 
 #form for release of incoming documents
 class ReleaseForm(forms.ModelForm): 
+    document = forms.FileField(
+        label='Select a PDF file',
+        required=True,
+        widget=forms.ClearableFileInput(attrs={'accept': 'application/pdf'})
+    )
     forwarded_to = forms.ModelChoiceField(queryset=Department.objects.all(), empty_label="Please select office:")
     class Meta:
         model = OutgoingDocs

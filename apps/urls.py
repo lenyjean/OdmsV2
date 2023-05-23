@@ -42,6 +42,7 @@ urlpatterns = [
     path("tracking/<str:pk>", tracking_list, name="tracking_list"),
 
     path("notifications", notifications_list, name="notifications_list"),
+    path("notification/count", notification_count, name="notification_count"),
 
     path("document-status", document_status, name="document_status"),
 

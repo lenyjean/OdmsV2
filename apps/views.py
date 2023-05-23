@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -362,3 +363,9 @@ def delete_department(request, pk):
     department = Department.objects.filter(id=pk)
     department.delete()
     return redirect('department-list')
+
+
+def notification_count(request):
+    count = Notifications.objects.filter(is_read=False, department=request.user.department).count()
+
+    return JsonResponse(count, safe=False)
