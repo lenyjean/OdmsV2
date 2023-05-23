@@ -332,7 +332,7 @@ def delete_account(request,pk):
     """
     account = User.objects.filter(id=pk)
     account.delete()
-    return redirect('account')
+    return redirect('/user/list')
 
 
 @login_required(login_url='/login')
