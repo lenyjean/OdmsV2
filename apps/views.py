@@ -204,13 +204,17 @@ def add_account(request):
             elif user_type == "Employee":
                 user_account.is_employee = True
             password = form.cleaned_data.get('password1')
-            user_account.set_password(password)
-            user_account.save()
-            print("User account saved:", user_account)
-            return redirect('user-list')
+            if form.cleaned_data.get('password1') != form.cleaned_data.get('password2'):
+                messages.error(request, f"Error adding new user. {form.errors.as_text()}")
+                return redirect('/user/add')
+            else:
+                user_account.set_password(password)
+                user_account.save()
+                print("User account saved:", user_account)
+                return redirect('user-list')
         else:
-            messages.error(request, f"Error adding new user. {form.errors}")
-            return redirect('/account/add')
+            messages.error(request, f"Error adding new user. {form.errors.as_text()}")
+            return redirect('/user/add')
     context = {
         "form": form
     }
