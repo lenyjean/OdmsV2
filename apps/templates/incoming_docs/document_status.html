@@ -18,6 +18,8 @@
                     </form>
                 </div>
             </div>
+
+
             <table class="table" id="docuTable" style="font-size: 14px;">
                 <thead>
                     <tr>
@@ -41,12 +43,19 @@
                     <td class="text-center py-4">{{ list.type_of_document }}</td>
                     <td class="text-center py-4">{{ list.user }}</td>
                     <td class="text-center py-4">{{ list.date_created }}</td>
-                    <td class="text-center py-4">{{ list.status }}</td>
+                    <td class="text-center py-4">
+                        {% if list.status == 'Pending' %}
+                            <span class="badge text-bg-primary">{{ list.status }}</span>
+                        {% elif list.status == 'Denied' %}
+                            <span class="badge text-bg-danger">{{ list.status }}</span>
+                        {% elif list.status == 'Forwarded' %}
+                            <span class="badge text-bg-success">{{ list.status }}</span>
+                        {% endif %}
+                    </td>
                     <td class="text-center py-4">{{ list.forwarded_to }}</td>
-                    <td class="text-center py-4">{{ list.date_forwarded }}</td>
-                    <td class="text-center py-4" >
-                        <a href="{{list.document.url}}" download style="font-size: 12px;">ACCEPT - FILE DOWNLOAD</a><br>
-                        <a href="{% url 'incoming-release' list.id %}" style="font-size: 12px;">RELEASE</a>
+                    <td class="text-center py-4">{{ list.date_forwarded }}</td>     
+                    <td class="text-center py-4">
+                        <a href="/tracking/{{list.id}}" style="font-size: 14px;">TRACK</a><br>
                     </td>
                     {% empty %}
                 <tr>
@@ -119,7 +128,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- search form javascript -->
 <script>

@@ -23,10 +23,12 @@ urlpatterns = [
     #urls for document type
     path('category/list', category, name='category-list'),
     path('category/add', add_category, name='category-add'),
+    path("delete_category/<str:pk>", delete_category, name="delete_category"),
 
     #urls for department
     path('department/list', department, name='department-list'),
     path('department/add', add_department, name='department-add'),
+    path("department/delete/<str:pk>", delete_department, name="delete_department"),
 
     #urls for user
     path('user/list', account, name='user-list'),
@@ -35,7 +37,12 @@ urlpatterns = [
     path('user/update/<str:pk>', update_account, name='user-update'),
     path('user/profile', profile, name='user-profile'),
     path('user/change-password', password_update, name='user-update-password'),
+    path('user/delete/<str:pk>', delete_account, name="delete_account"),
 
-    path("tracking/<str:pk>", tracking_list, name="tracking_list")
+    path("tracking/<str:pk>", tracking_list, name="tracking_list"),
+
+    path("notifications", notifications_list, name="notifications_list"),
+
+    path("document-status", document_status, name="document_status"),
 
 ]

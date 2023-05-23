@@ -30,7 +30,7 @@
           </li>
           {% if user.is_admin %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle px-2 text-white {% if current_page == 'category-list' %}text-primary{% endif %}" href="" role="button" data-bs-toggle="dropdown"
+            <a class="nav-link dropdown-toggle px-2 {% if current_page == 'category-list' %}text-primary{% endif %}" href="" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
               Category
             </a>
@@ -46,7 +46,7 @@
           </li>
           {% endif %}
           <li class="dropdown">
-            <a class="nav-link dropdown-toggle px-2 text-white {% if current_page == 'outgoing-list' %}text-primary{% endif %}" href="#" role="button" data-bs-toggle="dropdown"
+            <a class="nav-link dropdown-toggle px-2 {% if current_page == 'outgoing-list' %}text-primary{% endif %}" href="#" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
               Documents
             </a>
@@ -68,22 +68,24 @@
               <li>
                 <hr class="dropdown-divider">
               </li>
-              {% comment %} <li>
-                <a class="dropdown-item" href="">
+              {% if user.is_admin %}
+              <li>
+                <a class="dropdown-item" href="/document-status">
                   <i class="bi bi-clock-history"></i>&nbsp;&nbsp;Document Status
                 </a>
               
-              </li> {% endcomment %}
+              </li> 
+              {% endif %}
               {% endif %}
             </ul>
           </li>
           {% if user.is_admin %}
           <li class="nav-item">
-            <a class="nav-link px-2 text-white {% if current_page == 'user-list' %}text-primary{% endif %}" href="{% url 'user-list' %}">User Accounts</a>
+            <a class="nav-link px-2  {% if current_page == 'user-list' %}text-primary{% endif %}" href="{% url 'user-list' %}">User Accounts</a>
           </li>&nbsp;&nbsp;&nbsp;&nbsp;
           {% endif %}
           <li class="nav-item">
-            <a class="nav-link px-2 text-white {% if current_page == 'notification' %}active{% endif %}" href="">
+            <a class="nav-link px-2 text-white {% if current_page == 'notification' %}active{% endif %}"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
               <i class="bi bi-bell-fill"></i>&nbsp;<span class="badge text-bg-danger" hx-get="/notification/count"
                 hx-trigger="every 1s"></span>
             </a>
@@ -129,6 +131,16 @@
   </div>
 </nav>
 {% endwith %}
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" hx-get="/notifications" hx-trigger="every 1s" hx-target="#notification"> 
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasRightLabel">Notification</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body" id="notification">
+    {% include "notifications/notifications_list.html" %}
+  </div>
+</div>
 {% endif %}
 
 

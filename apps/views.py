@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.db.models import Q
 from .models import *
 from .forms import *
+import shortuuid
 
 import uuid
 
@@ -124,10 +125,12 @@ def add_outgoing(request):
     form = OutgoingDocsForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         obj = form.save(commit=False)
-        obj.tracking_no = gen_uuid
+        obj.tracking_no = shortuuid.uuid()[:8] 
         obj.user = request.user
         obj.save()
         create_tracking(office=obj.forwarded_to, status=obj.status, action="", comment="", docs=obj.id)
+        Notifications.objects.create(department = obj.forwarded_to, link=f"/outgoing-documents/view/{obj.id}", created_by=request.user, 
+                                      message = f"{request.user.first_name} {request.user.last_name} sent you a file",)
         return redirect('outgoing-list')
     context = {
         "form": form
@@ -137,12 +140,14 @@ def add_outgoing(request):
 def view_outgoing(request, pk):
     template_name = 'outgoing_docs/view_outgoing.html'
     document = OutgoingDocs.objects.filter(id=pk)
+    Notifications.objects.filter(link=f"/outgoing-documents/view/{pk}").update(is_read=True)
     context = {
         "document": document
     }
     return render(request, template_name, context)
-    
+
 #functions for INCOMING DOCUMENTS
+@login_required(login_url='/login')
 def release_docs(request, pk):
     template_name = 'incoming_docs/release.html'
     document = get_object_or_404(OutgoingDocs, id=pk)
@@ -159,6 +164,8 @@ def release_docs(request, pk):
             obj.status = 'Forwarded'
         obj.save()
         create_tracking(office=obj.forwarded_to, status=obj.status, action=actions, comment="", docs=obj.id)
+        Notifications.objects.create(department = obj.forwarded_to, link=f"/outgoing-documents/view/{obj.id}", created_by=request.user, 
+                                      message = f"{request.user.first_name} {request.user.last_name} sent you a file",)
         return redirect('outgoing-list')
     context = {
         "form": form,
@@ -282,7 +289,7 @@ def incoming_docs(request):
     }
     return render(request, template_name, context)
 
-
+@login_required(login_url='/login')
 def tracking_list(request, pk):
     template_name = "tracking/tracking_list.html"
     tracking = Tracking.objects.filter(docs=pk).order_by("-created")
@@ -291,3 +298,67 @@ def tracking_list(request, pk):
         "tracking" : tracking
     }  
     return render(request, template_name, context)
+
+@login_required(login_url='/login')
+def delete_category(request, pk):
+    Category.objects.filter(id=pk).delete()
+
+    return redirect("/category/list")
+
+
+def notifications_list(request):
+    notifications = Notifications.objects.filter(department=request.user.department).order_by("-created_at")
+    context = {
+        "notifications" : notifications
+    }
+    return render(request, "notifications/notifications_list.html", context)
+
+
+@login_required(login_url='/login')
+def delete_account(request,pk):
+    """
+    This function deletes a user account with a specific primary key and redirects to the accounts list
+    page.
+    
+    :param request: The request object represents the current HTTP request that the user has made to the
+    server. It contains information about the user's request, such as the HTTP method used (GET, POST,
+    etc.), the URL requested, any data submitted in the request, and more
+    :param pk: pk stands for "primary key". In this context, it refers to the unique identifier of a
+    specific user account in the database. The function is designed to delete the user account with the
+    specified primary key (pk) and then redirect the user to the list of all remaining user accounts
+    :return: a redirect to the 'accounts-list' URL after deleting the user account with the primary key
+    (pk) specified in the request.
+    """
+    account = User.objects.filter(id=pk)
+    account.delete()
+    return redirect('account')
+
+
+@login_required(login_url='/login')
+def document_status(request):
+    template_name= "incoming_docs/document_status.html"
+    document = OutgoingDocs.objects.all().order_by('-date_created')
+    paginator = Paginator(document, 10)
+    page_number = request.GET.get('page')
+    document = paginator.get_page(page_number)
+    context = {
+        "document": document,
+    }
+    return render(request, template_name, context)
+
+@login_required(login_url='/login')
+def delete_department(request, pk):
+    """
+    The function "delete_department" takes in a request and a primary key (pk) as parameters and likely
+    deletes a department object from a database based on the pk.
+    
+    :param request: The request object represents the current HTTP request that the user has made to the
+    server. It contains information about the user's request, such as the HTTP method used (GET, POST,
+    etc.), any data submitted with the request, and the user's session information
+    :param pk: "pk" stands for "primary key". In Django, the primary key is a unique identifier for each
+    record in a database table. In this case, "pk" is the primary key of the department that needs to be
+    deleted
+    """
+    department = Department.objects.filter(id=pk)
+    department.delete()
+    return redirect('department-list')

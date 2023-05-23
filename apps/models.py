@@ -168,3 +168,17 @@ class Tracking(models.Model):
     class Meta:
         verbose_name = 'Tracking'
         verbose_name_plural = 'Trackings'
+
+
+class Notifications(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    department = models.ForeignKey(Department, blank=True, null=True, on_delete=models.SET_NULL)
+    created_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL, related_name="created_by_user")
+    message = models.CharField(max_length=255)
+    is_read = models.BooleanField(default=False)
+    link = models.CharField(max_length=255)
+
+
+    def __str__(self):
+        return self.message

@@ -66,7 +66,7 @@
                         <a href="{% url 'user-view' list.id %}" class="btn btn-success btn-sm">
                             VIEW
                         </a>&nbsp;
-                        <a href="" type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                        <a type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
                         data-bs-target="#deleteModal" onclick="setID('{{ list.id }}')">
                             DELETE
                         </a>
@@ -165,7 +165,7 @@
 
 <script>
     function setID(id) {
-        document.getElementById("removeAcc").href = '/account/delete/' + id;
+        document.getElementById("removeAcc").href = '/user/delete/' + id;
     }
 </script>
 

@@ -29,7 +29,7 @@ class OutgoingDocsForm(forms.ModelForm):
 
     class Meta:
         model = OutgoingDocs
-        fields = ['title_docs', 'type_of_document', 'forwarded_to', 'status',]
+        fields = ['title_docs', 'type_of_document', 'forwarded_to', 'status','document']
 
     def clean_document(self):
         document = self.cleaned_data['document']
@@ -42,7 +42,7 @@ class ReleaseForm(forms.ModelForm):
     forwarded_to = forms.ModelChoiceField(queryset=Department.objects.all(), empty_label="Please select office:")
     class Meta:
         model = OutgoingDocs
-        fields = ['doc_actions', 'forwarded_to']
+        fields = ['doc_actions', 'forwarded_to', 'document']
 
 #form for incoming documents    
 # class IncomingDocsForm(forms.ModelForm):
