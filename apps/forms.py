@@ -29,7 +29,7 @@ class OutgoingDocsForm(forms.ModelForm):
 
     class Meta:
         model = OutgoingDocs
-        fields = ['title_docs', 'type_of_document', 'forwarded_to', 'status','document']
+        fields = ['title_docs', 'type_of_document', 'forwarded_to','document']
 
     def clean_document(self):
         document = self.cleaned_data['document']

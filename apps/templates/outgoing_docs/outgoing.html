@@ -54,13 +54,14 @@
                     <td class="text-center py-4">{{ list.user }}</td>
                     <td class="text-center py-4">{{ list.date_created }}</td>
                     <td class="text-center py-4">
-                        {% if list.status == 'Pending' %}
+                        {% comment %} {% if list.status == 'Pending' %}
                             <span class="badge text-bg-primary">{{ list.status }}</span>
                         {% elif list.status == 'Denied' %}
                             <span class="badge text-bg-danger">{{ list.status }}</span>
                         {% elif list.status == 'Forwarded' %}
                             <span class="badge text-bg-success">{{ list.status }}</span>
-                        {% endif %}
+                        {% endif %} {% endcomment %}
+                        <span class="badge text-bg-success">Forwarded</span>
                     </td>
                     <td class="text-center py-4">{{ list.forwarded_to }}</td>
                     <td class="text-center py-4">{{ list.date_forwarded }}</td>     
